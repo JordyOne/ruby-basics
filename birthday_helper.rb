@@ -1,26 +1,16 @@
 require 'date'
+require 'csv'
 
-puts "Give me your name right now!"
+file = CSV.read('birthday_data.csv', headers: true)
+
+puts "What is your full name?"
 reply = gets.chomp.downcase
 
-
-bday_list = File.open('birthday_data.csv')
-
-bday_hash = Hash.new
-
-bday_list.each do |line|
-
-  lastname,firstname,bday = line.split(',',4)
-  name = firstname.downcase + " " + lastname.downcase
-  bday_hash ["#{name}"] = "#{bday}"
+file.each do |row|
+  full_name = "#{row["first_name"]} #{row["last_name"]}".downcase
+  if reply == full_name
+    age = Date.today - Date.strptime(row["date_of_birth"], "%Y/%m/%d")
+    age = (age/365.25).to_i.to_s
+    p "#{row["first_name"]} #{row["last_name"]}: #{age} years old."
+  end
 end
-
-birthdate = bday_hash ["#{reply}"]
-year, month, day = birthdate.split('/')
-now = Date.today
-before = Date.new(year.to_i, month.to_i, day.to_i)
-difference_in_days = (now - before).to_i
-age = (difference_in_days/365.25).to_i
-
-
-puts "Hey, #{reply.capitalize}, your birthday is on the " + birthdate.to_s + " and you are " + age.to_s + " old."
