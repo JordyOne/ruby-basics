@@ -1,4 +1,4 @@
-puts "Give me your name right now?"
+puts "What is your name?"
 reply = gets.chomp
 
 puts "Hello, #{reply.capitalize}"
